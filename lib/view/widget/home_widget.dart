@@ -1,5 +1,6 @@
 import 'package:ecommerce/controller/home_cubit/home_cubit.dart';
 import 'package:ecommerce/model/carousel_model.dart';
+import 'package:ecommerce/utility/app_routes.dart';
 import 'package:ecommerce/view/widget/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,9 +82,15 @@ class HomeWidget extends StatelessWidget {
                               0.65, // Control item height/width ratio
                         ),
                         itemBuilder:
-                            (context, index) => ProductItem(
-                              productIndex: index,
-                              apiProduct: state.apiProduct,
+                            (context, index) => GestureDetector(
+                              onTap:
+                                  () => Navigator.of(context).pushNamed(
+                                    AppRoutes.productDetails,
+                                    arguments: state.apiProduct[index].id,
+                                  ),
+                              child: ProductItem(
+                                apiProduct: state.apiProduct[index],
+                              ),
                             ),
                       ),
                     ],

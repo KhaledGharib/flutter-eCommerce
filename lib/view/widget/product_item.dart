@@ -3,35 +3,33 @@ import 'package:ecommerce/model/product_item_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
-  final int productIndex;
-  final List<ProductItemModel> apiProduct;
-  const ProductItem({
-    super.key,
-    required this.productIndex,
-    required this.apiProduct,
-  });
+  final ProductItemModel apiProduct;
+  const ProductItem({super.key, required this.apiProduct});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final ProductItemModel product = apiProduct[productIndex];
     // final ProductItemModel product = dummyProductsData[productIndex];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Stack(
           children: [
-            SizedBox(
+            Container(
               height: size.height * 0.2,
               width: double.infinity,
-              child: CachedNetworkImage(
-                placeholder:
-                    (context, url) =>
-                        Center(child: CircularProgressIndicator.adaptive()),
-                errorWidget:
-                    (context, url, error) =>
-                        Icon(Icons.error, color: Colors.red),
-                imageUrl: product.imgUrl,
-                fit: BoxFit.contain,
+              decoration: BoxDecoration(color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CachedNetworkImage(
+                  placeholder:
+                      (context, url) =>
+                          Center(child: CircularProgressIndicator.adaptive()),
+                  errorWidget:
+                      (context, url, error) =>
+                          Icon(Icons.error, color: Colors.red),
+                  imageUrl: apiProduct.imgUrl,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
             Positioned(
@@ -58,7 +56,7 @@ class ProductItem extends StatelessWidget {
         ),
         SizedBox(height: 8),
         Text(
-          product.title,
+          apiProduct.title,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -68,7 +66,7 @@ class ProductItem extends StatelessWidget {
         ),
         SizedBox(height: 2),
         Text(
-          "\$${product.price.toString()}",
+          "\$${apiProduct.price.toString()}",
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 14,
