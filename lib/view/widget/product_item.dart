@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/model/product_item_model.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,16 @@ class ProductItem extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(product.imgUrl, fit: BoxFit.cover),
+                child: CachedNetworkImage(
+                  placeholder:
+                      (context, url) =>
+                          Center(child: CircularProgressIndicator.adaptive()),
+                  errorWidget:
+                      (context, url, error) =>
+                          Icon(Icons.error, color: Colors.red),
+                  imageUrl: product.imgUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Positioned(

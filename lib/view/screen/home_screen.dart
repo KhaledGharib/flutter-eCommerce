@@ -23,7 +23,9 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(height: size.height * 0.03),
                 FlutterCarousel(
                   options: FlutterCarouselOptions(
-                    viewportFraction: 0.9,
+                    viewportFraction: 0.8,
+                    autoPlay: true,
+                    enableInfiniteScroll: true,
                     height: 170,
                     showIndicator: true,
                     slideIndicator: CircularSlideIndicator(),
