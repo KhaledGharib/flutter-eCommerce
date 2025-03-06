@@ -1,7 +1,9 @@
+import 'package:ecommerce/model/carousel_model.dart';
 import 'package:ecommerce/model/product_item_model.dart';
 import 'package:ecommerce/view/widget/product_item.dart';
 import 'package:ecommerce/view/widget/top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -18,12 +20,27 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TopBar(size: size),
-                SizedBox(height: size.height * 0.04),
-                Text(
-                  "Carousel Slider",
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+                SizedBox(height: size.height * 0.03),
+                FlutterCarousel(
+                  options: FlutterCarouselOptions(
+                    viewportFraction: 0.9,
+                    height: 170,
+                    showIndicator: true,
+                    slideIndicator: CircularSlideIndicator(),
+                  ),
+                  items:
+                      dummyCarousel.map((e) {
+                        return Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 10.0),
+                          child: Container(
+                            // decoration: BoxDecoration(color: Colors.amber),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(e.imgUrl, fit: BoxFit.cover),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                 ),
                 SizedBox(height: size.height * 0.03),
                 Row(

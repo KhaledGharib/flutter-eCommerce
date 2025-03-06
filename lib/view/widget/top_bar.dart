@@ -15,7 +15,7 @@ class TopBar extends StatelessWidget {
             CircleAvatar(
               // maxRadius: 3,
               radius: size.height * 0.03,
-              backgroundImage: AssetImage(AppImages.userImage),
+              backgroundImage: NetworkImage(AppImages.userImage),
             ),
             SizedBox(width: size.width * 0.03),
 
