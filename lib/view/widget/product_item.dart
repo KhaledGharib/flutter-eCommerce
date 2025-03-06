@@ -4,34 +4,34 @@ import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
   final int productIndex;
-  const ProductItem({super.key, required this.productIndex});
+  final List<ProductItemModel> apiProduct;
+  const ProductItem({
+    super.key,
+    required this.productIndex,
+    required this.apiProduct,
+  });
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final ProductItemModel product = dummyProductsData[productIndex];
+    final ProductItemModel product = apiProduct[productIndex];
+    // final ProductItemModel product = dummyProductsData[productIndex];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Stack(
           children: [
-            Container(
-              height: size.height * 0.23,
+            SizedBox(
+              height: size.height * 0.2,
               width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: CachedNetworkImage(
-                  placeholder:
-                      (context, url) =>
-                          Center(child: CircularProgressIndicator.adaptive()),
-                  errorWidget:
-                      (context, url, error) =>
-                          Icon(Icons.error, color: Colors.red),
-                  imageUrl: product.imgUrl,
-                  fit: BoxFit.cover,
-                ),
+              child: CachedNetworkImage(
+                placeholder:
+                    (context, url) =>
+                        Center(child: CircularProgressIndicator.adaptive()),
+                errorWidget:
+                    (context, url, error) =>
+                        Icon(Icons.error, color: Colors.red),
+                imageUrl: product.imgUrl,
+                fit: BoxFit.contain,
               ),
             ),
             Positioned(
@@ -41,7 +41,7 @@ class ProductItem extends StatelessWidget {
                 height: 30,
                 width: 30,
                 decoration: BoxDecoration(
-                  color: Colors.deepPurple[200],
+                  color: Colors.grey[500],
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: GestureDetector(

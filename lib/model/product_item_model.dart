@@ -14,6 +14,18 @@ class ProductItemModel {
     required this.isFavorite,
     required this.category,
   });
+
+  // Factory method to create a ProductItemModel from JSON
+  factory ProductItemModel.fromJson(Map<String, dynamic> json) {
+    return ProductItemModel(
+      title: json['title'],
+      imgUrl: json['image'], // Matches API response
+      price: (json['price'] as num).toDouble(), // Ensuring type safety
+      category: json['category'],
+      isFavorite: false,
+      // rating: (json['rating']['rate'] as num).toDouble(), // Handling nested rating
+    );
+  }
 }
 
 List<ProductItemModel> dummyProductsData = [

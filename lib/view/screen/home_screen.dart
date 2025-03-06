@@ -1,85 +1,74 @@
-import 'package:ecommerce/model/carousel_model.dart';
-import 'package:ecommerce/model/product_item_model.dart';
-import 'package:ecommerce/view/widget/product_item.dart';
+import 'package:ecommerce/controller/home_cubit/home_cubit.dart';
+import 'package:ecommerce/view/widget/category_widget.dart';
+import 'package:ecommerce/view/widget/home_widget.dart';
 import 'package:ecommerce/view/widget/top_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TopBar(size: size),
-                SizedBox(height: size.height * 0.03),
-                FlutterCarousel(
-                  options: FlutterCarouselOptions(
-                    viewportFraction: 0.8,
-                    autoPlay: true,
-                    enableInfiniteScroll: true,
-                    height: 170,
-                    showIndicator: true,
-                    slideIndicator: CircularSlideIndicator(),
-                  ),
-                  items:
-                      dummyCarousel.map((e) {
-                        return Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 10.0),
-                          child: Container(
-                            // decoration: BoxDecoration(color: Colors.amber),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(e.imgUrl, fit: BoxFit.cover),
-                            ),
-                          ),
-                        );
-                      }).toList(),
+    return BlocProvider(
+      create: (context) {
+        final cubit = HomeCubit();
+        cubit.getHomeProduct();
+        return cubit;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 16,
                 ),
-                SizedBox(height: size.height * 0.03),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "New Arrivals 🔥",
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "See All",
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
+                child: TopBar(size: size),
+              ),
+              TabBar(
+                overlayColor: WidgetStateProperty.resolveWith<Color>((
+                  Set<WidgetState> states,
+                ) {
+                  return Colors.transparent;
+                }),
 
-                SizedBox(height: size.height * 0.01),
-                GridView.builder(
-                  itemCount: dummyProductsData.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 0.65, // Control item height/width ratio
-                  ),
-                  itemBuilder:
-                      (context, index) => ProductItem(productIndex: index),
+                splashBorderRadius: BorderRadius.circular(10),
+                controller: _tabController,
+                tabs: [Tab(text: "Home"), Tab(text: "Category")],
+                dividerColor: Colors.transparent,
+              ),
+
+              SizedBox(height: size.height * 0.03),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [HomeWidget(), CategoryWidget()],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
