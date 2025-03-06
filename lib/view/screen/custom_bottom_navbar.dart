@@ -15,27 +15,40 @@ class CustomBottomNavbar extends StatefulWidget {
 class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return PersistentTabView(
       tabs: [
         PersistentTabConfig(
           screen: HomeScreen(),
-
-          item: ItemConfig(icon: Icon(Icons.home), title: "Home"),
+          item: ItemConfig(
+            icon: Icon(Icons.home),
+            title: "Home",
+            activeForegroundColor: colorScheme.primary,
+          ),
         ),
         PersistentTabConfig(
           screen: CartScreen(),
-          item: ItemConfig(icon: Icon(Icons.shopping_bag), title: "Cart"),
+          item: ItemConfig(
+            icon: Icon(Icons.shopping_bag),
+            title: "Cart",
+            activeForegroundColor: colorScheme.primary,
+          ),
         ),
         PersistentTabConfig(
           screen: FavScreen(),
           item: ItemConfig(
             icon: Icon(Icons.favorite_rounded),
             title: "favorite",
+            activeForegroundColor: colorScheme.primary,
           ),
         ),
         PersistentTabConfig(
           screen: SettingScreen(),
-          item: ItemConfig(icon: Icon(Icons.person), title: "Settings"),
+          item: ItemConfig(
+            icon: Icon(Icons.person),
+            title: "Settings",
+            activeForegroundColor: colorScheme.primary,
+          ),
         ),
       ],
       navBarBuilder:

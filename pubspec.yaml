@@ -23,8 +23,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/image/user.png
+    - assets/image/product/the_mirac_jiz.png
+    - assets/image/product/meriza_kiles.png
   #   - images/a_dot_ham.jpeg
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

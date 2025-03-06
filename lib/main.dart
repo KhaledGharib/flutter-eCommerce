@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'E-commerce App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+          seedColor: Color(0xFF514EB5),
           surface: Colors.white,
         ),
       ),
