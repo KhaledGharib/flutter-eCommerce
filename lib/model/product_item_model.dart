@@ -5,6 +5,8 @@ class ProductItemModel {
   final double price;
   final bool isFavorite;
   final String category;
+  final double rating;
+  final int reviewCount;
 
   ProductItemModel({
     required this.id,
@@ -13,6 +15,8 @@ class ProductItemModel {
     required this.price,
     required this.isFavorite,
     required this.category,
+    required this.rating,
+    required this.reviewCount,
   });
 
   // Factory method to create a ProductItemModel from JSON
@@ -24,7 +28,9 @@ class ProductItemModel {
       price: (json['price'] as num).toDouble(), // Ensuring type safety
       category: json['category'],
       isFavorite: false,
-      // rating: (json['rating']['rate'] as num).toDouble(), // Handling nested rating
+      rating:
+          (json['rating']['rate'] as num).toDouble(), // Handling nested rating
+      reviewCount: (json['rating']['count']),
     );
   }
 }

@@ -25,13 +25,13 @@ class ProductDetails extends StatelessWidget {
           child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
             builder: (context, state) {
               if (state is ProductDetailsLoading) {
-                Center(child: CircularProgressIndicator.adaptive());
+                return Center(child: CircularProgressIndicator.adaptive());
               } else if (state is ProductDetailsLoaded) {
                 return Column(
                   children: [
                     Container(
                       height: 300,
-                      color: Colors.amber,
+                      color: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: CachedNetworkImage(
@@ -46,11 +46,32 @@ class ProductDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(state.productDetails.title),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(state.productDetails.title),
+                        Row(
+                          children: [
+                            Icon(Icons.star_rounded, color: Colors.amber),
+                            SizedBox(width: 6),
+                            Text(
+                              "${state.productDetails.rating}",
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            Text(
+                              "(${state.productDetails.reviewCount} Review)",
+                              style: Theme.of(context).textTheme.labelLarge!
+                                  .copyWith(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 );
               } else if (state is ProductDetailsError) {
-                debugPrint(state.message);
+                return Center(child: Text('Error: ${state.message}'));
               }
               return SizedBox.shrink();
             },

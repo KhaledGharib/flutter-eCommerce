@@ -17,7 +17,7 @@ class HomeWidget extends StatelessWidget {
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            Center(child: CircularProgressIndicator.adaptive());
+            return Center(child: CircularProgressIndicator.adaptive());
           } else if (state is HomeLoaded) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
