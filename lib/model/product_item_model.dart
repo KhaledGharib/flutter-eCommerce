@@ -7,6 +7,7 @@ class ProductItemModel {
   final String category;
   final double rating;
   final int reviewCount;
+  final String description;
 
   ProductItemModel({
     required this.id,
@@ -17,6 +18,7 @@ class ProductItemModel {
     required this.category,
     required this.rating,
     required this.reviewCount,
+    required this.description,
   });
 
   // Factory method to create a ProductItemModel from JSON
@@ -24,6 +26,7 @@ class ProductItemModel {
     return ProductItemModel(
       id: json['id'],
       title: json['title'],
+      description: json['description'],
       imgUrl: json['image'], // Matches API response
       price: (json['price'] as num).toDouble(), // Ensuring type safety
       category: json['category'],
