@@ -84,7 +84,10 @@ class HomeWidget extends StatelessWidget {
                         itemBuilder:
                             (context, index) => GestureDetector(
                               onTap:
-                                  () => Navigator.of(context).pushNamed(
+                                  () => Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).pushNamed(
                                     AppRoutes.productDetails,
                                     arguments: state.apiProduct[index].id,
                                   ),
