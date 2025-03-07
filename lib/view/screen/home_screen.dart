@@ -1,7 +1,7 @@
 import 'package:ecommerce/controller/home_cubit/home_cubit.dart';
-import 'package:ecommerce/view/widget/category_widget.dart';
-import 'package:ecommerce/view/widget/home_widget.dart';
-import 'package:ecommerce/view/widget/top_bar.dart';
+import 'package:ecommerce/view/widgets/category_widget.dart';
+import 'package:ecommerce/view/widgets/home_widget.dart';
+import 'package:ecommerce/view/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

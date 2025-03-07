@@ -8,6 +8,7 @@ class ProductItemModel {
   final double rating;
   final int reviewCount;
   final String description;
+  final int quantity;
 
   ProductItemModel({
     required this.id,
@@ -19,6 +20,7 @@ class ProductItemModel {
     required this.rating,
     required this.reviewCount,
     required this.description,
+    this.quantity = 1,
   });
 
   // Factory method to create a ProductItemModel from JSON
@@ -34,6 +36,31 @@ class ProductItemModel {
       rating:
           (json['rating']['rate'] as num).toDouble(), // Handling nested rating
       reviewCount: (json['rating']['count']),
+    );
+  }
+  ProductItemModel copyWith({
+    int? id,
+    String? title,
+    String? imgUrl,
+    double? price,
+    bool? isFavorite,
+    String? category,
+    double? rating,
+    int? reviewCount,
+    String? description,
+    int? quantity,
+  }) {
+    return ProductItemModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      imgUrl: imgUrl ?? this.imgUrl,
+      price: price ?? this.price,
+      isFavorite: isFavorite ?? this.isFavorite,
+      category: category ?? this.category,
+      rating: rating ?? this.rating,
+      reviewCount: reviewCount ?? this.reviewCount,
+      description: description ?? this.description,
+      quantity: quantity ?? this.quantity,
     );
   }
 }

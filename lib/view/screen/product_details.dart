@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce/controller/cubit/product_details_cubit.dart';
+import 'package:ecommerce/controller/product_details_cubit/product_details_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -125,29 +125,52 @@ class ProductDetails extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
+                                            GestureDetector(
+                                              onTap:
+                                                  () =>
+                                                      context
+                                                          .read<
+                                                            ProductDetailsCubit
+                                                          >()
+                                                          .quantityDecrement(),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        100,
+                                                      ),
+                                                ),
+                                                child: Icon(Icons.remove),
                                               ),
-                                              child: Icon(Icons.remove),
                                             ),
                                             Text(
-                                              "1",
+                                              state.productDetails.quantity
+                                                  .toString(),
                                               style: Theme.of(
                                                 context,
                                               ).textTheme.titleMedium!.copyWith(
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
+                                            GestureDetector(
+                                              onTap:
+                                                  () =>
+                                                      context
+                                                          .read<
+                                                            ProductDetailsCubit
+                                                          >()
+                                                          .quantityIncrement(),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        100,
+                                                      ),
+                                                ),
+                                                child: Icon(Icons.add),
                                               ),
-                                              child: Icon(Icons.add),
                                             ),
                                           ],
                                         ),

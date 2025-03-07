@@ -1,7 +1,7 @@
 import 'package:ecommerce/controller/home_cubit/home_cubit.dart';
 import 'package:ecommerce/model/carousel_model.dart';
 import 'package:ecommerce/utility/app_routes.dart';
-import 'package:ecommerce/view/widget/product_item.dart';
+import 'package:ecommerce/view/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';

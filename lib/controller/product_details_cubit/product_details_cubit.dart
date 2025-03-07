@@ -23,4 +23,26 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
       emit(ProductDetailsError(message: 'Error: ${e.toString()}'));
     }
   }
+
+  void quantityIncrement() {
+    if (state is ProductDetailsLoaded) {
+      final currentState = state as ProductDetailsLoaded;
+      final updatedProduct = currentState.productDetails.copyWith(
+        quantity: currentState.productDetails.quantity + 1,
+      );
+      emit(ProductDetailsLoaded(productDetails: updatedProduct));
+    }
+  }
+
+  void quantityDecrement() {
+    if (state is ProductDetailsLoaded) {
+      final currentState = state as ProductDetailsLoaded;
+      if (currentState.productDetails.quantity > 1) {
+        final updatedProduct = currentState.productDetails.copyWith(
+          quantity: currentState.productDetails.quantity - 1,
+        );
+        emit(ProductDetailsLoaded(productDetails: updatedProduct));
+      }
+    }
+  }
 }
