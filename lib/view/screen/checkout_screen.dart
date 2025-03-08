@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/controller/cart_cubit/cart_cubit.dart';
+import 'package:ecommerce/model/payment_method_model.dart';
 import 'package:ecommerce/utility/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,20 @@ import 'package:flutter_svg/svg.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key});
+
+  String maskAndFormatCardNumber(String cardNumber) {
+    if (cardNumber.length < 12) {
+      return "Invalid card number"; // Handle invalid cases
+    }
+
+    // Mask the first 12 digits
+    String masked = '*' * 12 + cardNumber.substring(12);
+
+    // Add spaces every 4 digits
+    return masked
+        .replaceAllMapped(RegExp(r".{4}"), (match) => "${match.group(0)} ")
+        .trim();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +49,26 @@ class CheckoutScreen extends StatelessWidget {
                               "Address",
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            Placeholder(),
+                            // Placeholder(),
+                            Card(
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                side: BorderSide(
+                                  color: Colors.black38,
+                                  width: 1,
+                                ),
+                              ),
+                              color: Colors.white,
+                              child: ListTile(
+                                title: Text("Homex"),
+                                subtitle: Text(
+                                  "123 Main St, New York, NY 10001",
+                                ),
+                                trailing: Icon(Icons.chevron_right_rounded),
+                                onTap: () {},
+                              ),
+                            ),
                             SizedBox(height: size.height * 0.05),
 
                             // Payment method
@@ -61,10 +95,208 @@ class CheckoutScreen extends StatelessWidget {
                                   '**** **** **** 5323',
                                 ), // Subtitle
                                 trailing: Icon(
-                                  Icons.chevron_right,
+                                  Icons.chevron_right_rounded,
                                 ), // Icon on the right
                                 onTap: () {
-                                  print('Tapped on John Doe');
+                                  showModalBottomSheet<void>(
+                                    backgroundColor: Colors.grey[100],
+                                    showDragHandle: true,
+                                    isScrollControlled: true,
+                                    useSafeArea: true,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                        ),
+                                        child: SafeArea(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0,
+                                              vertical: 18.0,
+                                            ),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  'Payment Method',
+                                                  style:
+                                                      Theme.of(
+                                                        context,
+                                                      ).textTheme.titleLarge,
+                                                ),
+                                                SizedBox(height: 16),
+                                                Flexible(
+                                                  child: ListView.separated(
+                                                    shrinkWrap: true,
+                                                    itemCount:
+                                                        paymentMethodList
+                                                            .length,
+                                                    separatorBuilder:
+                                                        (context, index) =>
+                                                            SizedBox(height: 8),
+                                                    itemBuilder: (
+                                                      context,
+                                                      index,
+                                                    ) {
+                                                      return Container(
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                          border: Border.all(
+                                                            color:
+                                                                Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                          ),
+                                                        ),
+                                                        // todo: wrap with card
+                                                        child: ListTile(
+                                                          leading: Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  8,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors
+                                                                      .grey[200],
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    8,
+                                                                  ),
+                                                            ),
+                                                            child: SvgPicture.asset(
+                                                              paymentMethodList[index]
+                                                                  .icon,
+                                                              width: 40,
+                                                              height: 40,
+                                                            ),
+                                                          ),
+                                                          title: Text(
+                                                            paymentMethodList[index]
+                                                                .name,
+
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                          ),
+                                                          subtitle: Text(
+                                                            maskAndFormatCardNumber(
+                                                              paymentMethodList[index]
+                                                                  .number,
+                                                            ),
+                                                          ),
+                                                          trailing: Radio<int>(
+                                                            value: index,
+                                                            groupValue: 1,
+                                                            onChanged:
+                                                                (value) {},
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                SizedBox(height: 16),
+                                                InkWell(
+                                                  onTap: () {},
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            10,
+                                                          ),
+                                                      border: Border.all(
+                                                        color:
+                                                            Colors
+                                                                .grey
+                                                                .shade300,
+                                                      ),
+                                                    ),
+                                                    child: ListTile(
+                                                      leading: Container(
+                                                        padding: EdgeInsets.all(
+                                                          8,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          color:
+                                                              Colors.grey[200],
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                8,
+                                                              ),
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.add,
+                                                          color:
+                                                              Theme.of(
+                                                                context,
+                                                              ).primaryColor,
+                                                        ),
+                                                      ),
+                                                      title: Text(
+                                                        'Add new payment method',
+                                                        style: TextStyle(
+                                                          color:
+                                                              Theme.of(
+                                                                context,
+                                                              ).primaryColor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 24),
+                                                FilledButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  style: ButtonStyle(
+                                                    minimumSize:
+                                                        MaterialStateProperty.all(
+                                                          Size(
+                                                            double.infinity,
+                                                            56,
+                                                          ),
+                                                        ),
+                                                    shape: MaterialStateProperty.all<
+                                                      RoundedRectangleBorder
+                                                    >(
+                                                      RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'Confirm Payment',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
                                 },
                               ),
                             ),

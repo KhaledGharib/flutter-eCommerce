@@ -17,6 +17,7 @@ dependencies:
   flutter_bloc: ^9.1.0
   flutter_carousel_widget: ^3.1.0
   flutter_svg: ^2.0.17
+  google_maps_flutter: ^2.10.1
   persistent_bottom_nav_bar_v2: ^5.3.1
 
 dev_dependencies:
@@ -34,6 +35,7 @@ flutter:
     - assets/image/carousel/carousel1.png
     - assets/icon/visa.svg
     - assets/icon/mastercard.svg
+    - assets/icon/paypal.svg
   #   - assets/image/carousel/carousel2.png
   #   - images/a_dot_ham.jpeg
   # To add custom fonts to your application, add a fonts section here,

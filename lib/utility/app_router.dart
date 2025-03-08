@@ -1,4 +1,3 @@
-import 'package:ecommerce/controller/cart_cubit/cart_cubit.dart';
 import 'package:ecommerce/controller/product_details_cubit/product_details_cubit.dart';
 import 'package:ecommerce/utility/app_routes.dart';
 import 'package:ecommerce/view/screen/checkout_screen.dart';
