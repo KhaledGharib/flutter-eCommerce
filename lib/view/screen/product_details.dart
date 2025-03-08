@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ecommerce/controller/cart_cubit/cart_cubit.dart';
 import 'package:ecommerce/controller/product_details_cubit/product_details_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -238,7 +239,19 @@ class ProductDetails extends StatelessWidget {
                           ),
                           FilledButton.icon(
                             icon: Icon(Icons.shopping_bag_rounded, size: 30),
-                            onPressed: () {},
+                            onPressed: () {
+                              context.read<CartCubit>().addItem(
+                                state.productDetails,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${state.productDetails.title} added to cart',
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            },
                             label: Text(
                               "Add to Cart",
                               style: TextStyle(

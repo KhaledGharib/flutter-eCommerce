@@ -1,9 +1,7 @@
-import 'package:ecommerce/controller/home_cubit/home_cubit.dart';
 import 'package:ecommerce/view/widgets/category_widget.dart';
 import 'package:ecommerce/view/widgets/home_widget.dart';
 import 'package:ecommerce/view/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,46 +28,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocProvider(
-      create: (context) {
-        final cubit = HomeCubit();
-        cubit.getHomeProduct();
-        return cubit;
-      },
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 16,
-                ),
-                child: TopBar(size: size),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 16,
               ),
-              TabBar(
-                overlayColor: WidgetStateProperty.resolveWith<Color>((
-                  Set<WidgetState> states,
-                ) {
-                  return Colors.transparent;
-                }),
+              child: TopBar(size: size),
+            ),
+            TabBar(
+              overlayColor: WidgetStateProperty.resolveWith<Color>((
+                Set<WidgetState> states,
+              ) {
+                return Colors.transparent;
+              }),
 
-                splashBorderRadius: BorderRadius.circular(10),
+              splashBorderRadius: BorderRadius.circular(10),
+              controller: _tabController,
+              tabs: [Tab(text: "Home"), Tab(text: "Category")],
+              dividerColor: Colors.transparent,
+            ),
+
+            SizedBox(height: size.height * 0.03),
+            Expanded(
+              child: TabBarView(
                 controller: _tabController,
-                tabs: [Tab(text: "Home"), Tab(text: "Category")],
-                dividerColor: Colors.transparent,
+                children: const [HomeWidget(), CategoryWidget()],
               ),
-
-              SizedBox(height: size.height * 0.03),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: const [HomeWidget(), CategoryWidget()],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
