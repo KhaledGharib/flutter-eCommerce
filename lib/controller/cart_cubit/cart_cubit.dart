@@ -12,7 +12,7 @@ class CartCubit extends Cubit<CartState> {
   List<CartItem> get items => [..._items];
 
   double get totalAmount {
-    return _items.fold(0.0, (sum, item) => sum + item.totalPrice);
+    return _items.where((item) => item.isSelected).fold(0.0, (sum, item) => sum + item.totalPrice);
   }
 
   void addItem(ProductItemModel product) {
@@ -49,5 +49,15 @@ class CartCubit extends Cubit<CartState> {
   void clearCart() {
     _items.clear();
     emit(CartLoaded(items: items, totalAmount: totalAmount));
+  }
+
+  void toggleItemSelection(int itemId) {
+    final index = _items.indexWhere((item) => item.id == itemId);
+    if (index >= 0) {
+      _items[index] = _items[index].copyWith(
+        isSelected: !_items[index].isSelected,
+      );
+      emit(CartLoaded(items: items, totalAmount: totalAmount));
+    }
   }
 }

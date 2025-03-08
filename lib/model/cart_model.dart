@@ -5,6 +5,7 @@ class CartItem {
   final String title;
   final String imgUrl;
   final double price;
+  final bool isSelected;
   int quantity;
 
   CartItem({
@@ -13,6 +14,7 @@ class CartItem {
     required this.imgUrl,
     required this.price,
     this.quantity = 1,
+    this.isSelected = true,
   });
 
   double get totalPrice => price * quantity;
@@ -23,6 +25,7 @@ class CartItem {
     String? imgUrl,
     double? price,
     int? quantity,
+    bool? isSelected,
   }) {
     return CartItem(
       id: id ?? this.id,
@@ -30,6 +33,7 @@ class CartItem {
       imgUrl: imgUrl ?? this.imgUrl,
       price: price ?? this.price,
       quantity: quantity ?? this.quantity,
+      isSelected: isSelected ?? this.isSelected,
     );
   }
 
