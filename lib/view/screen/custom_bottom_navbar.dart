@@ -17,6 +17,7 @@ class _CustomBottomNavbarState extends State<CustomBottomNavbar> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return PersistentTabView(
+      handleAndroidBackButtonPress: false,
       tabs: [
         PersistentTabConfig(
           screen: HomeScreen(),

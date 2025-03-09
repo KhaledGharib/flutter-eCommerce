@@ -2,6 +2,7 @@ import 'package:ecommerce/controller/product_details_cubit/product_details_cubit
 import 'package:ecommerce/utility/app_routes.dart';
 import 'package:ecommerce/view/screen/checkout_screen.dart';
 import 'package:ecommerce/view/screen/home_screen.dart';
+import 'package:ecommerce/view/screen/payment_method_screen.dart';
 import 'package:ecommerce/view/screen/product_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,8 @@ class AppRouter {
         );
       case AppRoutes.checkout:
         return MaterialPageRoute(builder: (_) => const CheckoutScreen());
+      case AppRoutes.paymentMethod:
+        return MaterialPageRoute(builder: (_) => const PaymentMethodScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => const SafeArea(child: Center(child: Text("no data"))),
