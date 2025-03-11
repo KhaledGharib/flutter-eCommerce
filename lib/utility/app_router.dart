@@ -2,6 +2,7 @@ import 'package:ecommerce/controller/payment_cubit/payment_cubit.dart';
 import 'package:ecommerce/controller/product_details_cubit/product_details_cubit.dart';
 import 'package:ecommerce/utility/app_routes.dart';
 import 'package:ecommerce/view/screen/checkout_screen.dart';
+import 'package:ecommerce/view/screen/custom_bottom_navbar.dart';
 import 'package:ecommerce/view/screen/home_screen.dart';
 import 'package:ecommerce/view/screen/login_screen.dart';
 import 'package:ecommerce/view/screen/payment_method_screen.dart';
@@ -15,7 +16,7 @@ class AppRouter {
       case AppRoutes.login:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
       case AppRoutes.homeRoute:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => const CustomBottomNavbar());
       case AppRoutes.productDetails:
         // final ProductItemModel product = settings.arguments as ProductItemModel;
         final int productId = settings.arguments as int;
