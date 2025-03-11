@@ -4,14 +4,14 @@ import 'package:ecommerce/view/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final size = MediaQuery.of(context).size;
     final authCubit = BlocProvider.of<AuthCubit>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('Create Account')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -51,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
               Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 16),
                     // Email/Phone field
@@ -75,13 +74,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                          AppRoutes.register,
+                          AppRoutes.login,
                           ModalRoute.withName('/'),
                         );
                       },
-                      child: Text("Register"),
+                      child: Text("Already have an account?"),
                     ),
-
                     const SizedBox(height: 24),
                     // Create Account button
                     BlocConsumer<AuthCubit, AuthState>(
@@ -95,6 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (state is AuthAuthenticated) {
                           Navigator.of(context).pushNamed(AppRoutes.homeRoute);
                         }
+                      },
+                      builder: (context, state) {
                         if (state is AuthError) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -102,8 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           });
                         }
-                      },
-                      builder: (context, state) {
                         if (state is AuthLoading) {
                           return SizedBox(
                             width: double.infinity,
@@ -126,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                await authCubit.login(
+                                await authCubit.signUp(
                                   _usernameController.text,
                                   _passwordController.text,
                                 );
@@ -139,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             child: const Text(
-                              'Login',
+                              'Create Account',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
