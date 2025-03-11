@@ -1,7 +1,7 @@
 import 'package:ecommerce/controller/payment_cubit/payment_cubit.dart';
 import 'package:ecommerce/model/payment_method_model.dart';
 import 'package:ecommerce/utility/app_icons.dart';
-import 'package:ecommerce/view/widgets/payment_text_field.dart';
+import 'package:ecommerce/view/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

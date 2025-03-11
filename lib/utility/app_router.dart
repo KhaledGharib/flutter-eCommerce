@@ -3,6 +3,7 @@ import 'package:ecommerce/controller/product_details_cubit/product_details_cubit
 import 'package:ecommerce/utility/app_routes.dart';
 import 'package:ecommerce/view/screen/checkout_screen.dart';
 import 'package:ecommerce/view/screen/home_screen.dart';
+import 'package:ecommerce/view/screen/login_screen.dart';
 import 'package:ecommerce/view/screen/payment_method_screen.dart';
 import 'package:ecommerce/view/screen/product_details.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.login:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
       case AppRoutes.homeRoute:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case AppRoutes.productDetails:

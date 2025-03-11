@@ -41,7 +41,14 @@ class _PaymentTextFieldState extends State<PaymentTextField> {
             maxLength: widget.maxLength,
             controller: widget.controller,
             keyboardType: widget.keyboardType,
-            validator: widget.validator,
+            validator:
+                widget.validator ??
+                (value) {
+                  if (value!.isEmpty) {
+                    return '${widget.title} is required';
+                  }
+                  return null;
+                },
             inputFormatters: widget.inputFormatters,
             decoration: InputDecoration(
               counterText: "",
