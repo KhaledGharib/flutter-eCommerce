@@ -1,5 +1,9 @@
+import 'package:ecommerce/controller/payment_cubit/payment_cubit.dart';
+import 'package:ecommerce/model/payment_method_model.dart';
+import 'package:ecommerce/utility/app_icons.dart';
 import 'package:ecommerce/view/widgets/payment_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   const PaymentMethodScreen({super.key});
@@ -44,6 +48,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = BlocProvider.of<PaymentCubit>(context);
     return Scaffold(
       appBar: AppBar(title: const Text("Payment Method")),
       body: SafeArea(
@@ -93,36 +98,60 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,
-                      child: FilledButton(
-                        style: ButtonStyle(
-                          splashFactory: NoSplash.splashFactory,
-                          padding: WidgetStateProperty.all<EdgeInsets>(
-                            EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                          ),
-                          shape:
-                              WidgetStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
+                      child: BlocBuilder<PaymentCubit, PaymentState>(
+                        bloc: cubit,
+                        builder: (context, state) {
+                          if (state is PaymentInitial) {
+                            return FilledButton(
+                              style: ButtonStyle(
+                                splashFactory: NoSplash.splashFactory,
+                                padding: WidgetStateProperty.all<EdgeInsets>(
+                                  EdgeInsets.symmetric(
+                                    vertical: 16,
+                                    horizontal: 24,
+                                  ),
+                                ),
+                                shape: WidgetStateProperty.all<
+                                  RoundedRectangleBorder
+                                >(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
                                 ),
                               ),
-                        ),
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          if (_formKey.currentState!.validate()) {
-                            // If the form is valid, display a snackbar. In the real world,
-                            // you'd often call a server or save the information in a database.
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+                                if (_formKey.currentState!.validate()) {
+                                  // If the form is valid, display a snackbar. In the real world,
+                                  PaymentMethodModel payment =
+                                      PaymentMethodModel(
+                                        number: _cardNumberController.text,
+                                        icon: AppIcons.visaSVG,
+                                        name: _cardHolderNameController.text,
+                                        expire: _cardExpireDateController.text,
+                                        ccv: _cardCcvController.text,
+                                      );
+                                  cubit.savePaymentMethod(payment);
+                                  // you'd often call a server or save the information in a database.
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   const SnackBar(
+                                  //     content: Text('Processing Data'),
+                                  //   ),
+                                  // );
+                                  Navigator.pop(context);
+                                }
+                              },
+                              child: Text(
+                                "Add Payment Method",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             );
                           }
+                          return Text("Error");
                         },
-                        child: Text(
-                          "Add Payment Method",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                       ),
                     ),
                   ],

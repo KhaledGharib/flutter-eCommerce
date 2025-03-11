@@ -1,6 +1,6 @@
 import 'package:ecommerce/controller/cart_cubit/cart_cubit.dart';
 import 'package:ecommerce/controller/home_cubit/home_cubit.dart';
-import 'package:ecommerce/controller/payment_method_cubit/payment_method_cubit.dart';
+// import 'package:ecommerce/controller/payment_method_cubit/payment_method_cubit.dart';
 import 'package:ecommerce/utility/app_router.dart';
 import 'package:ecommerce/view/screen/custom_bottom_navbar.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           },
         ),
         BlocProvider(create: (context) => CartCubit()),
-        BlocProvider(create: (context) => PaymentMethodCubit()),
+        // BlocProvider(create: (context) => PaymentMethodCubit()),
       ],
       child: MaterialApp(
         title: 'E-commerce App',

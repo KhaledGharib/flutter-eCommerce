@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/controller/cart_cubit/cart_cubit.dart';
+import 'package:ecommerce/controller/payment_cubit/payment_cubit.dart';
 import 'package:ecommerce/model/payment_method_model.dart';
 import 'package:ecommerce/utility/app_icons.dart';
 import 'package:ecommerce/utility/app_routes.dart';
@@ -27,6 +28,7 @@ class CheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final paymentCubit = BlocProvider.of<PaymentCubit>(context);
     return Scaffold(
       appBar: AppBar(title: Text("Checkout")),
       body: SafeArea(
@@ -78,119 +80,171 @@ class CheckoutScreen extends StatelessWidget {
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
 
-                            if (paymentMethodList.isEmpty) ...[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    AppRoutes.paymentMethod,
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
+                            BlocBuilder<PaymentCubit, PaymentState>(
+                              bloc: paymentCubit,
+                              builder: (context, state) {
+                                if (state is PaymentLoading) {
+                                  return CircularProgressIndicator.adaptive();
+                                } else if (state is PaymentLoaded) {
+                                  return Card(
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side: BorderSide(
+                                        color: Colors.black38,
+                                        width: 1,
+                                      ),
+                                    ),
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                  child: ListTile(
-                                    leading: Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        borderRadius: BorderRadius.circular(8),
+                                    child: ListTile(
+                                      leading: SvgPicture.asset(
+                                        AppIcons.masterCardSVG,
                                       ),
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    title: Text(
-                                      'Add new payment method',
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ] else ...[
-                              Card(
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  side: BorderSide(
-                                    color: Colors.black38,
-                                    width: 1,
-                                  ),
-                                ),
-                                color: Colors.white,
-                                child: ListTile(
-                                  leading: SvgPicture.asset(
-                                    AppIcons.masterCardSVG,
-                                  ),
-                                  title: Text(
-                                    paymentMethodList[1].name,
-                                  ), // Main title
-                                  subtitle: Text(
-                                    maskAndFormatCardNumber(
-                                      paymentMethodList[0].number,
-                                    ),
-                                  ), // Subtitle
-                                  trailing: Icon(
-                                    Icons.chevron_right_rounded,
-                                  ), // Icon on the right
-                                  onTap: () {
-                                    showModalBottomSheet<void>(
-                                      backgroundColor: Colors.grey[100],
-                                      showDragHandle: true,
-                                      isScrollControlled: true,
-                                      useSafeArea: true,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(20),
-                                            ),
-                                          ),
-                                          child: SafeArea(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 16.0,
-                                                    vertical: 18.0,
-                                                  ),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    'Payment Method',
-                                                    style:
-                                                        Theme.of(
-                                                          context,
-                                                        ).textTheme.titleLarge,
-                                                  ),
-                                                  SizedBox(height: 16),
-                                                  Flexible(
-                                                    child: ListView.separated(
-                                                      shrinkWrap: true,
-                                                      itemCount:
-                                                          paymentMethodList
-                                                              .length,
-                                                      separatorBuilder:
-                                                          (context, index) =>
-                                                              SizedBox(
+                                      title: Text(
+                                        paymentMethodList[1].name,
+                                      ), // Main title
+                                      subtitle: Text(
+                                        maskAndFormatCardNumber(
+                                          paymentMethodList[0].number,
+                                        ),
+                                      ), // Subtitle
+                                      trailing: Icon(
+                                        Icons.chevron_right_rounded,
+                                      ), // Icon on the right
+                                      onTap: () {
+                                        showModalBottomSheet<void>(
+                                          backgroundColor: Colors.grey[100],
+                                          showDragHandle: true,
+                                          isScrollControlled: true,
+                                          useSafeArea: true,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                      top: Radius.circular(20),
+                                                    ),
+                                              ),
+                                              child: SafeArea(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16.0,
+                                                        vertical: 18.0,
+                                                      ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        'Payment Method',
+                                                        style:
+                                                            Theme.of(context)
+                                                                .textTheme
+                                                                .titleLarge,
+                                                      ),
+                                                      SizedBox(height: 16),
+                                                      Flexible(
+                                                        child: ListView.separated(
+                                                          shrinkWrap: true,
+                                                          itemCount:
+                                                              paymentMethodList
+                                                                  .length,
+                                                          separatorBuilder:
+                                                              (
+                                                                context,
+                                                                index,
+                                                              ) => SizedBox(
                                                                 height: 8,
                                                               ),
-                                                      itemBuilder: (
-                                                        context,
-                                                        index,
-                                                      ) {
-                                                        return Container(
+                                                          itemBuilder: (
+                                                            context,
+                                                            index,
+                                                          ) {
+                                                            return Container(
+                                                              decoration: BoxDecoration(
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      10,
+                                                                    ),
+                                                                border: Border.all(
+                                                                  color:
+                                                                      Colors
+                                                                          .grey
+                                                                          .shade300,
+                                                                ),
+                                                              ),
+                                                              // todo: wrap with card
+                                                              child: ListTile(
+                                                                leading: Container(
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        8,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
+                                                                    color:
+                                                                        Colors
+                                                                            .grey[200],
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          8,
+                                                                        ),
+                                                                  ),
+                                                                  child: SvgPicture.asset(
+                                                                    paymentMethodList[index]
+                                                                        .icon,
+                                                                    width: 40,
+                                                                    height: 40,
+                                                                  ),
+                                                                ),
+                                                                title: Text(
+                                                                  paymentMethodList[index]
+                                                                      .name,
+                                                                  style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                  ),
+                                                                ),
+                                                                subtitle: Text(
+                                                                  maskAndFormatCardNumber(
+                                                                    paymentMethodList[index]
+                                                                        .number,
+                                                                  ),
+                                                                ),
+                                                                trailing: Radio<
+                                                                  int
+                                                                >(
+                                                                  value: index,
+                                                                  groupValue: 1,
+                                                                  onChanged:
+                                                                      (
+                                                                        value,
+                                                                      ) {},
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 16),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.pushNamed(
+                                                            context,
+
+                                                            AppRoutes
+                                                                .paymentMethod,
+                                                          );
+                                                        },
+                                                        child: Container(
                                                           decoration: BoxDecoration(
                                                             color: Colors.white,
                                                             borderRadius:
@@ -204,7 +258,6 @@ class CheckoutScreen extends StatelessWidget {
                                                                       .shade300,
                                                             ),
                                                           ),
-                                                          // todo: wrap with card
                                                           child: ListTile(
                                                             leading: Container(
                                                               padding:
@@ -220,141 +273,353 @@ class CheckoutScreen extends StatelessWidget {
                                                                       8,
                                                                     ),
                                                               ),
-                                                              child: SvgPicture.asset(
-                                                                paymentMethodList[index]
-                                                                    .icon,
-                                                                width: 40,
-                                                                height: 40,
+                                                              child: Icon(
+                                                                Icons.add,
+                                                                color:
+                                                                    Theme.of(
+                                                                      context,
+                                                                    ).primaryColor,
                                                               ),
                                                             ),
                                                             title: Text(
-                                                              paymentMethodList[index]
-                                                                  .name,
+                                                              'Add new payment method',
                                                               style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
+                                                                color:
+                                                                    Theme.of(
+                                                                      context,
+                                                                    ).primaryColor,
                                                               ),
                                                             ),
-                                                            subtitle: Text(
-                                                              maskAndFormatCardNumber(
-                                                                paymentMethodList[index]
-                                                                    .number,
-                                                              ),
-                                                            ),
-                                                            trailing:
-                                                                Radio<int>(
-                                                                  value: index,
-                                                                  groupValue: 1,
-                                                                  onChanged:
-                                                                      (
-                                                                        value,
-                                                                      ) {},
-                                                                ),
                                                           ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 16),
-                                                  InkWell(
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                        context,
-                                                        AppRoutes.paymentMethod,
-                                                      );
-                                                    },
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              10,
-                                                            ),
-                                                        border: Border.all(
-                                                          color:
-                                                              Colors
-                                                                  .grey
-                                                                  .shade300,
                                                         ),
                                                       ),
-                                                      child: ListTile(
-                                                        leading: Container(
-                                                          padding:
-                                                              EdgeInsets.all(8),
-                                                          decoration: BoxDecoration(
-                                                            color:
-                                                                Colors
-                                                                    .grey[200],
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  8,
+                                                      SizedBox(height: 24),
+                                                      FilledButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                            context,
+                                                          );
+                                                        },
+                                                        style: ButtonStyle(
+                                                          minimumSize:
+                                                              MaterialStateProperty.all(
+                                                                Size(
+                                                                  double
+                                                                      .infinity,
+                                                                  56,
                                                                 ),
-                                                          ),
-                                                          child: Icon(
-                                                            Icons.add,
-                                                            color:
-                                                                Theme.of(
-                                                                  context,
-                                                                ).primaryColor,
+                                                              ),
+                                                          shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder
+                                                          >(
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    10,
+                                                                  ),
+                                                            ),
                                                           ),
                                                         ),
-                                                        title: Text(
-                                                          'Add new payment method',
+                                                        child: Text(
+                                                          'Confirm Payment',
                                                           style: TextStyle(
-                                                            color:
-                                                                Theme.of(
-                                                                  context,
-                                                                ).primaryColor,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
-                                                  SizedBox(height: 24),
-                                                  FilledButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    style: ButtonStyle(
-                                                      minimumSize:
-                                                          MaterialStateProperty.all(
-                                                            Size(
-                                                              double.infinity,
-                                                              56,
-                                                            ),
-                                                          ),
-                                                      shape: MaterialStateProperty.all<
-                                                        RoundedRectangleBorder
-                                                      >(
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                10,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    child: Text(
-                                                      'Confirm Payment',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
-                                            ),
-                                          ),
+                                            );
+                                          },
                                         );
                                       },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
+                                    ),
+                                  );
+                                }
+                                return SizedBox.shrink();
+                              },
+                            ),
+                            // if (paymentMethodList.isEmpty) ...[
+                            //   InkWell(
+                            //     onTap: () {
+                            //       Navigator.pushNamed(
+                            //         context,
+                            //         AppRoutes.paymentMethod,
+                            //       );
+                            //     },
+                            //     child: Container(
+                            //       decoration: BoxDecoration(
+                            //         color: Colors.white,
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         border: Border.all(
+                            //           color: Colors.grey.shade300,
+                            //         ),
+                            //       ),
+                            //       child: ListTile(
+                            //         leading: Container(
+                            //           padding: EdgeInsets.all(8),
+                            //           decoration: BoxDecoration(
+                            //             color: Colors.grey[200],
+                            //             borderRadius: BorderRadius.circular(8),
+                            //           ),
+                            //           child: Icon(
+                            //             Icons.add,
+                            //             color: Theme.of(context).primaryColor,
+                            //           ),
+                            //         ),
+                            //         title: Text(
+                            //           'Add new payment method',
+                            //           style: TextStyle(
+                            //             color: Theme.of(context).primaryColor,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ] else ...[
+                            //   Card(
+                            //     elevation: 0,
+                            //     shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(10.0),
+                            //       side: BorderSide(
+                            //         color: Colors.black38,
+                            //         width: 1,
+                            //       ),
+                            //     ),
+                            //     color: Colors.white,
+                            //     child: ListTile(
+                            //       leading: SvgPicture.asset(
+                            //         AppIcons.masterCardSVG,
+                            //       ),
+                            //       title: Text(
+                            //         paymentMethodList[1].name,
+                            //       ), // Main title
+                            //       subtitle: Text(
+                            //         maskAndFormatCardNumber(
+                            //           paymentMethodList[0].number,
+                            //         ),
+                            //       ), // Subtitle
+                            //       trailing: Icon(
+                            //         Icons.chevron_right_rounded,
+                            //       ), // Icon on the right
+                            //       onTap: () {
+                            //         showModalBottomSheet<void>(
+                            //           backgroundColor: Colors.grey[100],
+                            //           showDragHandle: true,
+                            //           isScrollControlled: true,
+                            //           useSafeArea: true,
+                            //           context: context,
+                            //           builder: (BuildContext context) {
+                            //             return Container(
+                            //               decoration: BoxDecoration(
+                            //                 borderRadius: BorderRadius.vertical(
+                            //                   top: Radius.circular(20),
+                            //                 ),
+                            //               ),
+                            //               child: SafeArea(
+                            //                 child: Padding(
+                            //                   padding:
+                            //                       const EdgeInsets.symmetric(
+                            //                         horizontal: 16.0,
+                            //                         vertical: 18.0,
+                            //                       ),
+                            //                   child: Column(
+                            //                     mainAxisSize: MainAxisSize.min,
+                            //                     crossAxisAlignment:
+                            //                         CrossAxisAlignment.start,
+                            //                     children: <Widget>[
+                            //                       Text(
+                            //                         'Payment Method',
+                            //                         style:
+                            //                             Theme.of(
+                            //                               context,
+                            //                             ).textTheme.titleLarge,
+                            //                       ),
+                            //                       SizedBox(height: 16),
+                            //                       Flexible(
+                            //                         child: ListView.separated(
+                            //                           shrinkWrap: true,
+                            //                           itemCount:
+                            //                               paymentMethodList
+                            //                                   .length,
+                            //                           separatorBuilder:
+                            //                               (context, index) =>
+                            //                                   SizedBox(
+                            //                                     height: 8,
+                            //                                   ),
+                            //                           itemBuilder: (
+                            //                             context,
+                            //                             index,
+                            //                           ) {
+                            //                             return Container(
+                            //                               decoration: BoxDecoration(
+                            //                                 color: Colors.white,
+                            //                                 borderRadius:
+                            //                                     BorderRadius.circular(
+                            //                                       10,
+                            //                                     ),
+                            //                                 border: Border.all(
+                            //                                   color:
+                            //                                       Colors
+                            //                                           .grey
+                            //                                           .shade300,
+                            //                                 ),
+                            //                               ),
+                            //                               // todo: wrap with card
+                            //                               child: ListTile(
+                            //                                 leading: Container(
+                            //                                   padding:
+                            //                                       EdgeInsets.all(
+                            //                                         8,
+                            //                                       ),
+                            //                                   decoration: BoxDecoration(
+                            //                                     color:
+                            //                                         Colors
+                            //                                             .grey[200],
+                            //                                     borderRadius:
+                            //                                         BorderRadius.circular(
+                            //                                           8,
+                            //                                         ),
+                            //                                   ),
+                            //                                   child: SvgPicture.asset(
+                            //                                     paymentMethodList[index]
+                            //                                         .icon,
+                            //                                     width: 40,
+                            //                                     height: 40,
+                            //                                   ),
+                            //                                 ),
+                            //                                 title: Text(
+                            //                                   paymentMethodList[index]
+                            //                                       .name,
+                            //                                   style: TextStyle(
+                            //                                     fontWeight:
+                            //                                         FontWeight
+                            //                                             .w500,
+                            //                                   ),
+                            //                                 ),
+                            //                                 subtitle: Text(
+                            //                                   maskAndFormatCardNumber(
+                            //                                     paymentMethodList[index]
+                            //                                         .number,
+                            //                                   ),
+                            //                                 ),
+                            //                                 trailing:
+                            //                                     Radio<int>(
+                            //                                       value: index,
+                            //                                       groupValue: 1,
+                            //                                       onChanged:
+                            //                                           (
+                            //                                             value,
+                            //                                           ) {},
+                            //                                     ),
+                            //                               ),
+                            //                             );
+                            //                           },
+                            //                         ),
+                            //                       ),
+                            //                       SizedBox(height: 16),
+                            //                       InkWell(
+                            //                         onTap: () {
+                            //                           Navigator.pushNamed(
+                            //                             context,
+                            //                             AppRoutes.paymentMethod,
+                            //                           );
+                            //                         },
+                            //                         child: Container(
+                            //                           decoration: BoxDecoration(
+                            //                             color: Colors.white,
+                            //                             borderRadius:
+                            //                                 BorderRadius.circular(
+                            //                                   10,
+                            //                                 ),
+                            //                             border: Border.all(
+                            //                               color:
+                            //                                   Colors
+                            //                                       .grey
+                            //                                       .shade300,
+                            //                             ),
+                            //                           ),
+                            //                           child: ListTile(
+                            //                             leading: Container(
+                            //                               padding:
+                            //                                   EdgeInsets.all(8),
+                            //                               decoration: BoxDecoration(
+                            //                                 color:
+                            //                                     Colors
+                            //                                         .grey[200],
+                            //                                 borderRadius:
+                            //                                     BorderRadius.circular(
+                            //                                       8,
+                            //                                     ),
+                            //                               ),
+                            //                               child: Icon(
+                            //                                 Icons.add,
+                            //                                 color:
+                            //                                     Theme.of(
+                            //                                       context,
+                            //                                     ).primaryColor,
+                            //                               ),
+                            //                             ),
+                            //                             title: Text(
+                            //                               'Add new payment method',
+                            //                               style: TextStyle(
+                            //                                 color:
+                            //                                     Theme.of(
+                            //                                       context,
+                            //                                     ).primaryColor,
+                            //                               ),
+                            //                             ),
+                            //                           ),
+                            //                         ),
+                            //                       ),
+                            //                       SizedBox(height: 24),
+                            //                       FilledButton(
+                            //                         onPressed: () {
+                            //                           Navigator.pop(context);
+                            //                         },
+                            //                         style: ButtonStyle(
+                            //                           minimumSize:
+                            //                               MaterialStateProperty.all(
+                            //                                 Size(
+                            //                                   double.infinity,
+                            //                                   56,
+                            //                                 ),
+                            //                               ),
+                            //                           shape: MaterialStateProperty.all<
+                            //                             RoundedRectangleBorder
+                            //                           >(
+                            //                             RoundedRectangleBorder(
+                            //                               borderRadius:
+                            //                                   BorderRadius.circular(
+                            //                                     10,
+                            //                                   ),
+                            //                             ),
+                            //                           ),
+                            //                         ),
+                            //                         child: Text(
+                            //                           'Confirm Payment',
+                            //                           style: TextStyle(
+                            //                             fontSize: 16,
+                            //                             fontWeight:
+                            //                                 FontWeight.bold,
+                            //                           ),
+                            //                         ),
+                            //                       ),
+                            //                     ],
+                            //                   ),
+                            //                 ),
+                            //               ),
+                            //             );
+                            //           },
+                            //         );
+                            //       },
+                            //     ),
+                            //   ),
+                            // ],
                             SizedBox(height: size.height * 0.05),
                             // product list
                             Column(

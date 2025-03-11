@@ -1,3 +1,4 @@
+import 'package:ecommerce/controller/payment_cubit/payment_cubit.dart';
 import 'package:ecommerce/controller/product_details_cubit/product_details_cubit.dart';
 import 'package:ecommerce/utility/app_routes.dart';
 import 'package:ecommerce/view/screen/checkout_screen.dart';
@@ -28,9 +29,25 @@ class AppRouter {
           settings: settings,
         );
       case AppRoutes.checkout:
-        return MaterialPageRoute(builder: (_) => const CheckoutScreen());
+        return MaterialPageRoute(
+          builder:
+              (_) => BlocProvider(
+                create: (context) {
+                  final cubit = PaymentCubit();
+                  cubit.getPaymentMethod();
+                  return cubit;
+                },
+                child: const CheckoutScreen(),
+              ),
+        );
       case AppRoutes.paymentMethod:
-        return MaterialPageRoute(builder: (_) => const PaymentMethodScreen());
+        return MaterialPageRoute(
+          builder:
+              (_) => BlocProvider(
+                create: (context) => PaymentCubit(),
+                child: const PaymentMethodScreen(),
+              ),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => const SafeArea(child: Center(child: Text("no data"))),
